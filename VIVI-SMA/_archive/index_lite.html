@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>VIVÍ SMA — Todo San Martín de los Andes en un solo lugar</title>
+<meta name="description" content="VIVÍ SMA: descubrí dónde comer, dormir, qué hacer, comprar y qué eventos ocurren en San Martín de los Andes, todo en un solo lugar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde: #176B4D;
+    --verde-oscuro: #12563d;
+    --verde-profundo: #0D3B2E;
+    --crema: #F7F4EA;
+    --crema-2: #F0EBDC;
+    --blanco: #FFFFFF;
+    --negro: #111111;
+    --gris: #4B514E;
+    --naranja: #E8792F;
+    --celeste: #8CCFD1;
+    --borde: rgba(17,17,17,0.08);
+    --sombra: 0 1px 2px rgba(13,59,46,0.04), 0 8px 24px rgba(13,59,46,0.06);
+    --sombra-hover: 0 4px 10px rgba(13,59,46,0.07), 0 16px 32px rgba(13,59,46,0.10);
+    --sombra-flot: 0 12px 30px rgba(13,59,46,0.16), 0 2px 8px rgba(13,59,46,0.08);
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--crema);
+    color: var(--negro);
+    font-family: 'Manrope', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  body.locked{ overflow: hidden; }
+  h1,h2,h3, .serif{
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    color: var(--negro);
+    letter-spacing: -0.01em;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family: inherit; cursor:pointer; }
+  ::selection{ background: var(--verde); color:#fff; }
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline: 2px solid var(--verde);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .wrap{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 18px;
+  }
+
+  /* ================= NAV ================= */
+  .nav{
+    position: sticky;
+    top:0;
+    z-index: 60;
+    background: rgba(247,244,234,0.46);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--borde);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo{
+    font-family:'DM Serif Display', serif;
+    font-size: 19px;
+    font-weight:400;
+    color: var(--verde-profundo);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+  .nav-links{ display:none; }
+  .nav-actions{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:40px; height:40px;
+    border-radius:50%;
+    border:1px solid var(--borde);
+    background: var(--blanco);
+    display:flex; align-items:center; justify-content:center;
+    transition: transform .18s ease, border-color .18s ease;
+    color: var(--verde-profundo);
+  }
+  .icon-btn:active{ transform: scale(0.94); }
+  .btn-negocio{ display:none; }
+
+  .burger{
+    width:44px; height:44px;
+    border-radius:50%;
+    border:1px solid var(--borde);
+    background:var(--blanco);
+    display:flex;
+    align-items:center; justify-content:center;
+    position:relative;
+    flex-shrink:0;
+  }
+  .burger .bar{
+    width:17px; height:2px;
+    background: var(--verde-profundo);
+    border-radius: 2px;
+    position:absolute;
+    transition: transform .25s ease, opacity .2s ease, top .25s ease;
+  }
+  .burger .bar:nth-child(1){ top:16px; }
+  .burger .bar:nth-child(2){ top:22px; }
+  .burger .bar:nth-child(3){ top:28px; }
+  .burger.open .bar:nth-child(1){ top:21px; transform: rotate(45deg); }
+  .burger.open .bar:nth-child(2){ opacity:0; }
+  .burger.open .bar:nth-child(3){ top:21px; transform: rotate(-45deg); }
+
+  .mobile-menu{
+    position:fixed;
+    inset: 60px 0 0 0;
+    z-index:55;
+    background: var(--crema);
+    transform: translateY(-8px);
+    opacity:0;
+    pointer-events:none;
+    transition: opacity .22s ease, transform .22s ease;
+    overflow-y:auto;
+  }
+  .mobile-menu.open{ opacity:1; transform: translateY(0); pointer-events:auto; }
+  .mobile-menu-inner{ padding: 10px 20px 30px; }
+  .mobile-menu a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 17px 4px;
+    border-bottom: 1px solid var(--borde);
+    font-weight:700;
+    color: var(--negro);
+    font-size:17px;
+  }
+  .mobile-menu a svg{ opacity:0.35; }
+  .mobile-cta{
+    margin-top: 22px;
+    display:block;
+    text-align:center;
+    background: var(--verde);
+    color:#fff !important;
+    padding: 15px;
+    border-radius: 100px;
+    font-weight:800 !important;
+    border-bottom: none !important;
+  }
+
+  /* ============ NAV DESKTOP (independiente del resto del layout) ============ */
+  @media (min-width: 700px){
+    .wrap.nav-inner{ padding: 0 20px; }
+    .nav-inner{ height: 64px; }
+    .nav-logo{ font-size: 18px; flex-shrink:0; }
+    .nav-links{
+      display:flex; align-items:center; gap: 12px;
+      font-size: 13px; font-weight: 600;
+      flex-shrink:0;
+    }
+    .nav-links a{ color: var(--gris); position:relative; padding: 6px 0; white-space:nowrap; transition: color .2s ease; }
+    .nav-links a:hover{ color: var(--verde-profundo); }
+    .nav-links a.active{ color: var(--verde-profundo); }
+    .nav-links a.active::after{ content:''; position:absolute; left:0; right:0; bottom:-2px; height:2px; background: var(--verde); border-radius: 2px; }
+    .nav-actions{ flex-shrink:0; gap:6px; }
+    .icon-btn{ width:34px; height:34px; }
+    .btn-negocio{
+      display:inline-block;
+      background: var(--verde); color:#fff; padding: 8px 13px;
+      border-radius: 100px; font-size: 12.5px; font-weight: 700; border:none;
+      transition: background .18s ease, transform .18s ease; white-space: nowrap;
+    }
+    .btn-negocio:hover{ background: var(--verde-oscuro); transform: translateY(-1px); }
+    .burger{ display:none; }
+    .mobile-menu{ display:none; }
+  }
+  @media (min-width: 900px){
+    .wrap.nav-inner{ padding: 0 24px; }
+    .nav-inner{ height: 68px; }
+    .nav-logo{ font-size: 20px; }
+    .nav-links{ gap: 18px; font-size: 13.5px; }
+    .icon-btn{ width:40px; height:40px; }
+    .btn-negocio{ padding: 9px 15px; font-size: 13px; }
+  }
+  @media (min-width: 1000px){
+    .wrap.nav-inner{ padding: 0 32px; }
+    .nav-inner{ height: 72px; }
+    .nav-logo{ font-size: 22px; }
+    .nav-links{ gap: 28px; font-size: 14.5px; }
+    .btn-negocio{ padding: 10px 18px; font-size: 14px; }
+  }
+
+  /* ================= HERO ================= */
+  .hero{
+    position:relative;
+    min-height: 76svh;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    overflow:hidden;
+    padding-bottom: 60px;
+  }
+  .hero-photo{
+    position:absolute; inset:0;
+    z-index:0;
+  }
+  .hero-photo img{ width:100%; height:100%; object-fit:cover; }
+  .hero-photo::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(13,59,46,0.35) 0%, rgba(13,59,46,0.55) 55%, rgba(10,45,35,0.88) 100%);
+  }
+  .hero-content{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding: 0 20px;
+  }
+  .hero-eyebrow{
+    opacity:0;
+    animation: rise .7s ease forwards;
+    font-size: 10.5px;
+    font-weight:700;
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.16);
+    backdrop-filter: blur(6px);
+    display:inline-flex;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .hero h1{
+    opacity:0;
+    animation: rise .8s ease .08s forwards;
+    font-size: clamp(40px, 13vw, 62px);
+    line-height: 1;
+    margin: 0 0 12px;
+    color: #fff;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.25);
+    text-transform: uppercase;
+  }
+  .hero p.claim{
+    opacity:0;
+    animation: rise .8s ease .18s forwards;
+    font-size: clamp(10.5px, 3.3vw, 17px);
+    color: rgba(255,255,255,0.92);
+    white-space: nowrap;
+    margin: 0;
+    font-weight:600;
+  }
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* floating search+intent card, overlaps hero bottom edge */
+  .hero-float{
+    position:relative;
+    z-index:3;
+    margin: -46px 14px 0;
+    background: var(--blanco);
+    border-radius: 24px;
+    box-shadow: var(--sombra-flot);
+    padding: 16px 16px 14px;
+    opacity:0;
+    animation: rise .8s ease .28s forwards;
+  }
+  .searchbar{
+    background: var(--crema);
+    border: 1px solid var(--borde);
+    border-radius: 100px;
+    padding: 4px 4px 4px 18px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition: box-shadow .2s ease, border-color .2s ease;
+  }
+  .searchbar:focus-within{
+    border-color: var(--verde);
+    box-shadow: 0 0 0 4px rgba(23,107,77,0.12);
+  }
+  .searchbar svg{ flex-shrink:0; color: var(--gris); }
+  .searchbar input{
+    border:none; outline:none;
+    background:transparent;
+    font-family:'Manrope',sans-serif;
+    font-size: 15.5px;
+    width:100%;
+    color: var(--negro);
+    min-width:0;
+    padding: 11px 0;
+  }
+  .searchbar input::placeholder{ color: #8b9390; }
+  .searchbar button{
+    flex-shrink:0;
+    background: var(--verde);
+    color:#fff;
+    border:none;
+    padding: 12px 18px;
+    border-radius: 100px;
+    font-weight:700;
+    font-size:14px;
+    transition: background .18s ease;
+  }
+  .searchbar button:active{ background: var(--verde-oscuro); }
+
+  .intent-label{
+    margin: 16px 0 9px 4px;
+    font-size: 11.5px;
+    font-weight:800;
+    color: var(--gris);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .intent-row{
+    display:flex;
+    gap: 8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding: 1px 1px 3px;
+    -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent 100%);
+    mask-image: linear-gradient(90deg, #000 92%, transparent 100%);
+  }
+  .intent-row::-webkit-scrollbar{ display:none; }
+  .pill{
+    flex-shrink:0;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background: var(--crema);
+    border: 1px solid var(--borde);
+    padding: 9px 14px;
+    border-radius: 100px;
+    font-weight:700;
+    font-size: 13px;
+    color: var(--negro);
+    white-space:nowrap;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .pill:active{ transform: scale(0.96); background: #eef5f1; border-color: var(--verde); }
+  .pill .emj{ font-size:15px; }
+
+  /* En pantallas anchas ya entran los 6 items: se centran y no sugieren scroll oculto */
+  @media (min-width: 700px){
+    .intent-row{
+      justify-content: center;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+
+  .demo-note{ text-align:center; padding: 16px 20px 0; }
+  .demo-note span{
+    display:inline-block;
+    font-size:11.5px;
+    font-weight:600;
+    color: var(--gris);
+    background: rgba(140,207,209,0.3);
+    padding: 6px 13px;
+    border-radius:100px;
+  }
+
+  /* ================= SECTION SHARED ================= */
+  section.block{ padding: 44px 0; }
+  .bg-blanco{ background: var(--blanco); }
+  .bg-crema{ background: var(--crema); }
+  .bg-crema2{ background: var(--crema-2); }
+  .bg-naranja-tint{ background: linear-gradient(180deg, rgba(232,121,47,0.10), rgba(232,121,47,0.02) 70%); }
+  .bg-celeste-tint{ background: linear-gradient(180deg, rgba(140,207,209,0.16), rgba(140,207,209,0.03) 70%); }
+
+  .block-head{ margin-bottom: 18px; }
+  .block-head h2{
+    font-size: 24px;
+    margin:0 0 5px;
+  }
+  .block-head .sub{
+    color: var(--gris);
+    font-size:13.5px;
+    margin:0;
+    max-width: 46ch;
+  }
+  .block-head-row{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap: 14px;
+  }
+  .see-all{
+    flex-shrink:0;
+    font-weight:700;
+    font-size:13px;
+    color: var(--verde-profundo);
+    border-bottom: 2px solid var(--verde);
+    padding-bottom:2px;
+    white-space:nowrap;
+  }
+
+  .scroll-row{
+    display:flex;
+    gap: 12px;
+    overflow-x:auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 18px 16px;
+    margin: 0 -18px;
+    scrollbar-width:none;
+  }
+  .scroll-row::-webkit-scrollbar{ display:none; }
+  .scroll-row .card{ flex: 0 0 82%; scroll-snap-align: start; }
+  .scroll-row .card:last-child{ margin-right: 6vw; }
+
+  .grid-row{ display:grid; grid-template-columns: 1fr; gap: 14px; }
+
+  /* ================= BUSINESS CARD ================= */
+  .card{
+    background: var(--blanco);
+    border-radius: 18px;
+    overflow:hidden;
+    border: 1px solid var(--borde);
+    box-shadow: var(--sombra);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .card:hover{ transform: translateY(-4px); box-shadow: var(--sombra-hover); }
+  .card-img-wrap{
+    position:relative;
+    aspect-ratio: 4/3;
+    overflow:hidden;
+    background: #e9e6da;
+  }
+  .card-img-wrap img{ width:100%; height:100%; object-fit:cover; transition: transform .5s ease; }
+  .card:hover .card-img-wrap img{ transform: scale(1.06); }
+  .badge{
+    position:absolute; top:12px; left:12px;
+    display:inline-flex; align-items:center;
+    background: var(--naranja);
+    color:#fff;
+    font-size:11px; font-weight:800; letter-spacing:0.07em;
+    padding: 6px 10px;
+    border-radius: 7px;
+    box-shadow: 0 3px 10px rgba(232,121,47,0.35);
+  }
+  .card-body{ padding: 16px 16px 18px; }
+  .card-body .cat{ font-size:12px; font-weight:700; color: var(--verde); margin-bottom:4px; }
+  .card-body h3{ font-family:'Manrope',sans-serif; font-weight:800; font-size:16.5px; margin: 0 0 6px; color: var(--negro); }
+  .card-body .loc{ font-size:12.5px; color: var(--gris); display:flex; align-items:center; gap:5px; margin-bottom:10px; }
+  .tags{ display:flex; gap:6px; flex-wrap:wrap; }
+  .tag{ font-size:11px; font-weight:600; color: var(--gris); background: var(--crema); padding: 4px 9px; border-radius:100px; }
+
+  /* ================= CATEGORIES ================= */
+  .cat-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cat-card{
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    padding: 13px 13px 14px;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    gap: 11px;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .cat-card:active{ transform: scale(0.97); }
+  .cat-icon{
+    width:36px; height:36px;
+    border-radius:10px;
+    background: #eef5f1;
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px;
+    flex-shrink:0;
+  }
+  .cat-card-text{ min-width:0; }
+  .cat-card h3{ font-family:'Manrope', sans-serif; font-weight:800; font-size:13.5px; margin:0 0 2px; }
+  .cat-card p{
+    font-size: 11px; color: var(--gris); margin:0; line-height:1.35;
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow:hidden;
+  }
+
+  /* ---- variante oscura (sección Categorías) ---- */
+  .section-dark{ background: var(--verde-profundo); }
+  .section-dark .block-head h2,
+  .section-dark .block-head .sub{ color: #fff; }
+  .section-dark .block-head .sub{ color: rgba(255,255,255,0.62); }
+  .section-dark .cat-card{
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.14);
+  }
+  .section-dark .cat-card:active{ background: rgba(255,255,255,0.12); }
+  .section-dark .cat-icon{ background: rgba(255,255,255,0.14); }
+  .section-dark .cat-card h3{ color:#fff; }
+  .section-dark .cat-card p{ color: rgba(255,255,255,0.58); }
+
+  /* ================= FRANJA LOCAL ================= */
+  .franja{
+    position:relative;
+    height: 220px;
+    overflow:hidden;
+  }
+  .franja img{ width:100%; height:100%; object-fit:cover; }
+  .franja::after{
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(58% 140% at 50% 50%, rgba(13,59,46,0.62), rgba(13,59,46,0.18) 72%);
+  }
+  .franja-text{
+    position:absolute; inset:0;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 0 28px;
+  }
+  .franja-text span{
+    color: rgba(255,255,255,0.75);
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-bottom:6px;
+  }
+  .franja-text h3{
+    color:#fff;
+    font-size: 25.5px;
+    margin:0 auto;
+    max-width: 280px;
+    line-height:1.2;
+  }
+  .franja-italica{
+    font-family:'DM Serif Display', serif;
+    font-style: italic;
+    font-weight:400;
+  }
+  .se-viven{
+    display:inline-block;
+    font-family:'DM Serif Display', serif;
+    font-style: normal;
+    font-weight:400;
+    font-size:1.08em;
+    letter-spacing:0.03em;
+    animation: seVivenBreathe 9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  /* ---- animación "respiración": aparece, permanece, desaparece, pausa ---- */
+  .franja-text{
+    animation: franjaBreathe 9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+  @keyframes franjaBreathe{
+    0%   { opacity:0; transform: translateY(15px); }
+    16%  { opacity:1; transform: translateY(0); }
+    54%  { opacity:1; transform: translateY(0); }
+    70%  { opacity:0; transform: translateY(10px); }
+    100% { opacity:0; transform: translateY(10px); }
+  }
+  @keyframes seVivenBreathe{
+    0%   { opacity:0;    transform: translateY(3px); }
+    16%  { opacity:0.75; transform: translateY(2px); }
+    20%  { opacity:1;    transform: translateY(0); }
+    54%  { opacity:1;    transform: translateY(0); }
+    70%  { opacity:0;    transform: translateY(4px); }
+    100% { opacity:0;    transform: translateY(4px); }
+  }
+
+  /* ================= DESTACADOS ================= */
+  .destacados-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:800; color: var(--naranja);
+    text-transform:uppercase; letter-spacing:0.06em;
+    margin-bottom:8px;
+  }
+  .destacados-tag::before{
+    content:'';
+    width:6px; height:6px;
+    border-radius:50%;
+    background: var(--naranja);
+  }
+
+  /* ================= PROMOS ================= */
+  .promo-card{
+    background: var(--blanco);
+    border-radius:16px;
+    border: 1px solid var(--borde);
+    overflow:hidden;
+    display:flex;
+    box-shadow: var(--sombra);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .promo-card:hover{ transform: translateY(-3px); box-shadow: var(--sombra-hover); }
+  .promo-img{ width: 104px; flex-shrink:0; background:#e9e6da; }
+  .promo-img img{ width:100%; height:100%; object-fit:cover; }
+  .promo-body{ padding: 13px 14px; display:flex; flex-direction:column; gap:4px; flex:1; min-width:0; }
+  .promo-vig{ font-size:11px; font-weight:700; color: var(--naranja); }
+  .promo-body h3{ font-family:'Manrope',sans-serif; font-weight:800; font-size:14.5px; margin:0; }
+  .promo-neg{ font-size:12px; color:var(--gris); margin:0 0 2px; }
+  .promo-link{
+    margin-top:auto; font-size:12.5px; font-weight:700;
+    color: var(--verde-profundo);
+    border-bottom: 2px solid var(--verde);
+    align-self:flex-start; padding-bottom:1px;
+  }
+  .promos-grid{ display:grid; grid-template-columns:1fr; gap:12px; }
+
+  /* ================= EVENTOS ================= */
+  .evento-card{
+    display:flex; gap:14px;
+    background: var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:16px;
+    padding: 13px;
+    box-shadow: var(--sombra);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .evento-card:hover{ transform: translateY(-3px); box-shadow: var(--sombra-hover); }
+  .evento-date{
+    flex-shrink:0; width: 54px; height:54px;
+    border-radius:12px;
+    background: var(--verde-profundo);
+    color:#fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .evento-date .d{ font-size:18px; font-weight:800; line-height:1; }
+  .evento-date .m{ font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
+  .evento-body h3{ font-family:'Manrope',sans-serif; font-weight:800; font-size:14.5px; margin:0 0 4px; }
+  .evento-meta{ font-size:12px; color:var(--gris); display:flex; flex-wrap:wrap; gap: 3px 10px; margin-bottom:4px; }
+  .evento-cat{ font-size:10.5px; font-weight:700; color: var(--celeste-txt, #1a8083); }
+  .eventos-grid{ display:grid; grid-template-columns: 1fr; gap:12px; }
+
+  /* ================= FOOTER ================= */
+  footer{
+    background: var(--verde-profundo);
+    color: rgba(255,255,255,0.82);
+    padding: 46px 0 22px;
+    margin-top: 10px;
+  }
+  .footer-grid{ display:flex; flex-direction:column; gap: 28px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .footer-brand h3{
+    font-family:'DM Serif Display', serif;
+    color:#fff; font-size:22px; margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+  .footer-brand p{ font-size:13.5px; line-height:1.6; max-width: 320px; color: rgba(255,255,255,0.65); }
+  .footer-cols{ display:grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .footer-col h4{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color: rgba(255,255,255,0.5); margin: 0 0 12px; }
+  .footer-col a{ display:block; font-size:13.5px; font-weight:600; color: rgba(255,255,255,0.85); margin-bottom: 10px; width: fit-content; }
+  .footer-bottom{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; padding-top: 20px; font-size:12.5px; color: rgba(255,255,255,0.5); }
+  .footer-social{ display:flex; gap:10px; }
+  .footer-social a{ width:36px; height:36px; border-radius:50%; border:1px solid rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; }
+
+  /* ================= TABLET+ (min-width 700px) ================= */
+  @media (min-width: 700px){
+    .wrap{ padding: 0 32px; }
+    .grid-row{ grid-template-columns: repeat(2, 1fr); }
+    .cat-grid{ grid-template-columns: repeat(4, 1fr); }
+    .promos-grid{ grid-template-columns: repeat(2,1fr); }
+    .eventos-grid{ grid-template-columns: repeat(2,1fr); }
+    .scroll-row .card{ flex-basis: 300px; }
+    .hero{ min-height: 74svh; }
+    .hero h1{ font-size: 84px; }
+    .hero-float{ max-width: 680px; margin: -50px auto 0; padding: 20px 20px 16px; }
+    .footer-grid{ flex-direction:row; justify-content:space-between; }
+    .footer-cols{ grid-template-columns: repeat(3,1fr); gap:32px; flex: 1; margin-left: 60px; }
+    .footer-bottom{ flex-direction:row; align-items:center; justify-content:space-between; }
+  }
+
+  /* ================= DESKTOP (min-width 1000px) ================= */
+  @media (min-width: 1000px){
+    section.block{ padding: 76px 0; }
+    .block-head{ margin-bottom: 30px; }
+    .block-head h2{ font-size: 34px; }
+    .block-head .sub{ font-size:15px; }
+    .block-head-row{ align-items:flex-end; }
+
+    .grid-row{ grid-template-columns: repeat(4,1fr); gap:18px; }
+    .cat-grid{ gap:14px; }
+    .cat-card{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:0;
+      padding: 22px 18px;
+    }
+    .cat-card:hover{ transform: translateY(-3px); border-color: var(--verde); box-shadow: var(--sombra); }
+    .section-dark .cat-card:hover{ transform: translateY(-3px); border-color: rgba(255,255,255,0.35); box-shadow: none; background: rgba(255,255,255,0.1); }
+    .cat-icon{ width:44px; height:44px; font-size:21px; margin-bottom:14px; }
+    .cat-card h3{ font-size:15.5px; margin-bottom:4px; }
+    .cat-card p{ font-size:12.5px; -webkit-line-clamp: 2; }
+
+    .scroll-row{ gap:18px; padding: 4px 4px 14px; margin:0 -4px; }
+    .scroll-row .card{ flex: 0 0 268px; }
+    .scroll-row .card:last-child{ margin-right:0; }
+
+    .promos-grid{ grid-template-columns: repeat(3,1fr); gap:16px; }
+    .promo-card:hover{ transform: translateY(-3px); }
+
+    .franja{ height: 300px; }
+    .franja-text{ padding: 0 40px; }
+    .franja-text h3{ font-size:35.5px; max-width:460px; }
+
+    .hero{ min-height: 88vh; }
+    .hero h1{ font-size: 108px; }
+    .hero-float{ max-width: 740px; }
+
+    footer{ padding: 64px 0 28px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-delay:0s !important; scroll-behavior:auto !important; transition-duration: 0.01ms !important; }
+    .franja-text{ animation: none !important; opacity:1 !important; transform:none !important; }
+    .se-viven{ animation: none !important; opacity:1 !important; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="nav-logo">VIVÍ SMA</a>
+    <nav class="nav-links">
+      <a href="#descubri" class="active">Explorar</a>
+      <a href="#categorias">Categorías</a>
+      <a href="#destacados">Destacados</a>
+      <a href="#promociones">Promociones</a>
+      <a href="#eventos">Eventos</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Buscar" onclick="document.getElementById('hero-search').focus(); document.getElementById('hero-search').scrollIntoView({behavior:'smooth', block:'center'});">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="btn-negocio">Sumá tu negocio</button>
+      <button class="burger" id="burgerBtn" aria-label="Abrir menú" aria-expanded="false">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="#descubri">Explorar <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></a>
+    <a href="#categorias">Categorías <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></a>
+    <a href="#destacados">Destacados <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></a>
+    <a href="#promociones">Promociones <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></a>
+    <a href="#eventos">Eventos <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></a>
+    <a href="#" class="mobile-cta">Sumá tu negocio</a>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-photo">
+    <img src="FOTO_PLACEHOLDER.jpg" alt="Vista aérea del lago y el pueblo de San Martín de los Andes">
+  </div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">San Martín de los Andes</span>
+    <h1>VIVÍ SMA</h1>
+    <p class="claim">Todo San Martín de los Andes en un solo lugar</p>
+  </div>
+</section>
+
+<div class="hero-float">
+  <div class="searchbar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="hero-search" type="text" placeholder="¿Qué estás buscando?">
+    <button>Buscar</button>
+  </div>
+  <p class="intent-label">¿Qué querés hacer?</p>
+  <div class="intent-row">
+    <a href="#categorias" class="pill"><span class="emj">🍽️</span> Comer</a>
+    <a href="#categorias" class="pill"><span class="emj">🏔️</span> Hacer</a>
+    <a href="#categorias" class="pill"><span class="emj">🛏️</span> Dormir</a>
+    <a href="#categorias" class="pill"><span class="emj">🛍️</span> Comprar</a>
+    <a href="#categorias" class="pill"><span class="emj">🔧</span> Servicios</a>
+    <a href="#eventos" class="pill"><span class="emj">📅</span> Eventos</a>
+  </div>
+</div>
+
+<div class="demo-note"><span>● Datos de demostración — negocios ficticios para validar la experiencia visual</span></div>
+
+<!-- ================= DESCUBRÍ ================= -->
+<section class="block bg-crema" id="descubri">
+  <div class="wrap">
+    <div class="block-head block-head-row">
+      <div>
+        <h2>Descubrí lugares cerca tuyo</h2>
+        <p class="sub">Elegidos por relevancia, no por publicidad.</p>
+      </div>
+      <a href="#" class="see-all">Ver todo</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="scroll-row" id="descubri-row"></div>
+  </div>
+</section>
+
+<!-- ================= CATEGORÍAS ================= -->
+<section class="block section-dark" id="categorias">
+  <div class="wrap">
+    <div class="block-head">
+      <h2>Explorá San Martín</h2>
+      <p class="sub">¿Qué estás buscando hoy?</p>
+    </div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+</section>
+
+<!-- ================= FRANJA LOCAL ================= -->
+<div class="franja">
+  <img src="FOTO_PLACEHOLDER.jpg" alt="Costanera y bosque a orillas del lago en San Martín de los Andes">
+  <div class="franja-text">
+    <span>Patagonia Argentina</span>
+    <h3><em class="franja-italica">Hay lugares que no se visitan,</em><br><strong class="se-viven">SE VIVEN</strong></h3>
+  </div>
+</div>
+
+<!-- ================= DESTACADOS ================= -->
+<section class="block bg-naranja-tint" id="destacados">
+  <div class="wrap">
+    <div class="block-head block-head-row">
+      <div>
+        <span class="destacados-tag">Destacados en VIVÍ SMA</span>
+        <h2 style="margin-top:2px;">Descubrí lugares que vale la pena conocer</h2>
+      </div>
+      <a href="#" class="see-all">Ver todo</a>
+    </div>
+    <div class="grid-row" id="destacados-grid"></div>
+  </div>
+</section>
+
+<!-- ================= PROMOCIONES ================= -->
+<section class="block bg-crema" id="promociones">
+  <div class="wrap">
+    <div class="block-head block-head-row">
+      <div>
+        <h2>Promociones</h2>
+        <p class="sub">Beneficios activos esta semana en distintos negocios de la ciudad.</p>
+      </div>
+      <a href="#" class="see-all">Ver todas</a>
+    </div>
+    <div class="promos-grid" id="promos-grid"></div>
+  </div>
+</section>
+
+<!-- ================= EVENTOS ================= -->
+<section class="block bg-celeste-tint" id="eventos">
+  <div class="wrap">
+    <div class="block-head block-head-row">
+      <div>
+        <h2>Eventos en la ciudad</h2>
+        <p class="sub">Lo que se viene: shows, ferias y actividades locales.</p>
+      </div>
+      <a href="#" class="see-all">Ver agenda</a>
+    </div>
+    <div class="eventos-grid" id="eventos-grid"></div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>VIVÍ SMA</h3>
+        <p>Una plataforma digital independiente para descubrir dónde comer, dormir, qué hacer, comprar y qué eventos ocurren en San Martín de los Andes.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explorar</h4>
+          <a href="#descubri">Descubrí</a>
+          <a href="#categorias">Categorías</a>
+          <a href="#destacados">Destacados</a>
+          <a href="#eventos">Eventos</a>
+        </div>
+        <div class="footer-col">
+          <h4>VIVÍ SMA</h4>
+          <a href="#">Sumá tu negocio</a>
+          <a href="#">Planes</a>
+          <a href="#">Sobre VIVÍ SMA</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer-col">
+          <h4>Ciudad</h4>
+          <a href="#">San Martín de los Andes</a>
+          <a href="#">Cómo llegar</a>
+          <a href="#">Mapa interactivo</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 VIVÍ SMA — Todo San Martín de los Andes en un solo lugar</span>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.7 14.2c-.2.6-1.3 1.2-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.2.3-.3.5-.2.2-.3.3-.5.5-.2.2-.3.4-.1.7.2.3.7 1.2 1.6 1.9 1.1.9 2 1.2 2.3 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.3.1.2.1.6-.1 1.1z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ---------------- MOCK DATA (datos ficticios de demostración) ----------------
+const IMG = (seed, w=600, h=450) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
+
+const categorias = [
+{icon:'🍝', nombre:'Gastronomía', desc:'Restaurantes, cafés, cervecerías y delivery.'},
+  {icon:'🛏️', nombre:'Alojamiento', desc:'Hoteles, cabañas, departamentos y camping.'}
+];
+
+const negocios = [
+{nombre:'La Casa del Ahumado', cat:'Gastronomía', loc:'Villegas 320', tags:['Trucha','Almuerzo'], destacado:true, img:IMG('ahumado')},
+  {nombre:'Refugio Quila', cat:'Alojamiento', loc:'Av. Costanera', tags:['Vista al lago','Cabañas'], destacado:false, img:IMG('refugio')}
+];
+
+const destacados = [
+{nombre:'La Casa del Ahumado', cat:'Gastronomía', loc:'Villegas 320', tags:['Trucha ahumada','Reservas'], img:IMG('ahumado2')},
+  {nombre:'Cervecería del Bosque', cat:'Gastronomía', loc:'Elordi 120', tags:['Artesanal','Música en vivo'], img:IMG('cerveceria2')}
+];
+
+const promos = [
+{neg:'Cervecería del Bosque', promo:'2x1 en pintas los martes', vig:'Vence en 4 días', img:IMG('promo1',300,300)},
+  {neg:'Andes Bike Rental', promo:'20% off en alquiler por medio día', vig:'Vence en 9 días', img:IMG('promo2',300,300)}
+];
+
+const eventos = [
+{dia:'12', mes:'Sep', nombre:'Feria de artesanos del bosque', hora:'11:00 – 20:00', lugar:'Plaza San Martín', cat:'Feria'},
+  {dia:'18', mes:'Sep', nombre:'Noche de música en vivo', hora:'21:00', lugar:'Cervecería del Bosque', cat:'Show'}
+];
+
+// ---------------- RENDER ----------------
+document.getElementById('descubri-row').innerHTML = negocios.map(n => `
+  <article class="card">
+    <div class="card-img-wrap">
+      <img src="${n.img}" alt="${n.nombre}" loading="lazy">
+      ${n.destacado ? '<span class="badge">DESTACADO</span>' : ''}
+    </div>
+    <div class="card-body">
+      <div class="cat">${n.cat}</div>
+      <h3>${n.nombre}</h3>
+      <div class="loc">📍 ${n.loc}</div>
+      <div class="tags">${n.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  </article>
+`).join('');
+
+document.getElementById('cat-grid').innerHTML = categorias.map(c => `
+  <a href="#descubri" class="cat-card">
+    <div class="cat-icon">${c.icon}</div>
+    <div class="cat-card-text">
+      <h3>${c.nombre}</h3>
+      <p>${c.desc}</p>
+    </div>
+  </a>
+`).join('');
+
+document.getElementById('destacados-grid').innerHTML = destacados.map(n => `
+  <article class="card">
+    <div class="card-img-wrap">
+      <img src="${n.img}" alt="${n.nombre}" loading="lazy">
+      <span class="badge">DESTACADO</span>
+    </div>
+    <div class="card-body">
+      <div class="cat">${n.cat}</div>
+      <h3>${n.nombre}</h3>
+      <div class="loc">📍 ${n.loc}</div>
+      <div class="tags">${n.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  </article>
+`).join('');
+
+document.getElementById('promos-grid').innerHTML = promos.map(p => `
+  <article class="promo-card">
+    <div class="promo-img"><img src="${p.img}" alt="${p.promo}" loading="lazy"></div>
+    <div class="promo-body">
+      <span class="promo-vig">${p.vig}</span>
+      <h3>${p.promo}</h3>
+      <p class="promo-neg">${p.neg}</p>
+      <span class="promo-link">Descubrir</span>
+    </div>
+  </article>
+`).join('');
+
+document.getElementById('eventos-grid').innerHTML = eventos.map(e => `
+  <article class="evento-card">
+    <div class="evento-date"><span class="d">${e.dia}</span><span class="m">${e.mes}</span></div>
+    <div class="evento-body">
+      <span class="evento-cat">${e.cat}</span>
+      <h3>${e.nombre}</h3>
+      <div class="evento-meta">
+        <span>🕒 ${e.hora}</span>
+        <span>📍 ${e.lugar}</span>
+      </div>
+    </div>
+  </article>
+`).join('');
+
+// ---------------- NAV MOBILE ----------------
+const burger = document.getElementById('burgerBtn');
+const menu = document.getElementById('mobileMenu');
+burger.addEventListener('click', () => {
+  const isOpen = menu.classList.toggle('open');
+  burger.classList.toggle('open', isOpen);
+  burger.setAttribute('aria-expanded', isOpen);
+  document.body.classList.toggle('locked', isOpen);
+});
+document.querySelectorAll('.mobile-menu a').forEach(a=>{
+  a.addEventListener('click', ()=>{
+    menu.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', false);
+    document.body.classList.remove('locked');
+  });
+});
+</script>
+</body>
+</html>

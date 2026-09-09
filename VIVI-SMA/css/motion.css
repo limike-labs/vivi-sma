@@ -1,0 +1,53 @@
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* ---- Sistema de motion design (directiva 48): fade-up con stagger ---- */
+  .reveal{
+    opacity:0;
+    transform: translateY(18px);
+    transition: opacity .6s cubic-bezier(0.22,0.61,0.36,1), transform .6s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .reveal.is-visible{
+    opacity:1;
+    transform: translateY(0);
+  }
+  /* variante para botones/links de acción: fade + scale muy sutil, sin traslado vertical */
+  .reveal-btn{
+    opacity:0;
+    transform: scale(0.94);
+    transition: opacity .35s cubic-bezier(0.22,0.61,0.36,1), transform .35s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .reveal-btn.is-visible{
+    opacity:1;
+    transform: scale(1);
+  }
+  @keyframes andiIdle{
+    0%, 100%{ transform: translateY(0) rotate(0deg); }
+    50%{ transform: translateY(-3px) rotate(-2deg); }
+  }
+  @keyframes franjaBreathe{
+    0%   { opacity:0; transform: translateY(15px); }
+    16%  { opacity:1; transform: translateY(0); }
+    54%  { opacity:1; transform: translateY(0); }
+    70%  { opacity:0; transform: translateY(10px); }
+    100% { opacity:0; transform: translateY(10px); }
+  }
+  @keyframes seVivenBreathe{
+    0%   { opacity:0;    transform: translateY(3px); }
+    16%  { opacity:0.75; transform: translateY(2px); }
+    20%  { opacity:1;    transform: translateY(0); }
+    54%  { opacity:1;    transform: translateY(0); }
+    70%  { opacity:0;    transform: translateY(4px); }
+    100% { opacity:0;    transform: translateY(4px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-delay:0s !important; scroll-behavior:auto !important; transition-duration: 0.01ms !important; }
+    .franja-text{ animation: none !important; opacity:1 !important; transform:none !important; }
+    .se-viven{ animation: none !important; opacity:1 !important; transform:none !important; }
+    .andi-avatar{ animation: none !important; }
+    .reveal{ opacity:1 !important; transform:none !important; }
+    .reveal-btn{ opacity:1 !important; transform:none !important; }
+  }

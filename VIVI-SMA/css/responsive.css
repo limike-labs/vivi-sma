@@ -1,0 +1,65 @@
+  /* ================= TABLET+ (min-width 700px) ================= */
+  @media (min-width: 700px){
+    .wrap{ padding: 0 32px; }
+    .grid-row{ grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .cat-grid{ grid-template-columns: repeat(4, 1fr); }
+    .promos-grid{ grid-template-columns: repeat(2,1fr); }
+    .eventos-grid{ grid-template-columns: repeat(2,1fr); }
+    .scroll-row .card{ flex-basis: 300px; }
+    .hero{ min-height: 74svh; }
+    .hero h1{ font-size: 84px; }
+    .hero-float{ max-width: 680px; margin: -50px auto 0; padding: 20px 20px 16px; }
+    .footer-grid{ flex-direction:row; justify-content:space-between; }
+    .footer-cols{ grid-template-columns: repeat(3,1fr); gap:32px; flex: 1; margin-left: 60px; }
+    .footer-bottom{ flex-direction:row; align-items:center; justify-content:space-between; }
+
+    /* A partir de tablet, la tarjeta de Descubrí/Destacados vuelve a su tamaño original */
+    .badge{ top:12px; left:12px; font-size:11px; padding: 6px 10px; border-radius: 7px; letter-spacing:0.07em; }
+    .card-body{ padding: 16px 16px 18px; }
+    .card-body .cat{ font-size:12px; margin-bottom:4px; }
+    .card-body h3{ font-size:16.5px; margin: 0 0 6px; }
+    .card-body .loc{ font-size:12.5px; gap:5px; margin-bottom:10px; }
+    .tags{ gap:6px; }
+    .tag{ font-size:11px; padding: 4px 9px; }
+  }
+
+  /* ================= DESKTOP (min-width 1000px) ================= */
+  @media (min-width: 1000px){
+    section.block{ padding: 76px 0; }
+    .block-head{ margin-bottom: 30px; }
+    .block-head h2{ font-size: 34px; }
+    .block-head .sub{ font-size:15px; }
+    .block-head-row{ align-items:flex-end; }
+
+    .grid-row{ grid-template-columns: repeat(4,1fr); gap:18px; }
+    .cat-grid{ gap:14px; }
+    .cat-card{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:0;
+      padding: 22px 18px;
+    }
+    .cat-card:hover{ transform: translateY(-3px); border-color: var(--verde-bosque); box-shadow: var(--sombra); }
+    .section-dark .cat-card:hover{ transform: translateY(-3px); border-color: rgba(255,255,255,0.35); box-shadow: none; background: rgba(255,255,255,0.1); }
+    .cat-icon{ width:44px; height:44px; font-size:21px; margin-bottom:14px; }
+    .cat-card h3{ font-size:15.5px; margin-bottom:4px; }
+    .cat-card p{ font-size:12.5px; -webkit-line-clamp: 2; }
+
+    .scroll-row{ gap:18px; padding: 4px 4px 14px; margin:0 -4px; }
+    .scroll-row .card{ flex: 0 0 268px; }
+    .scroll-row .card:last-child{ margin-right:0; }
+
+    .promos-grid{ grid-template-columns: repeat(3,1fr); gap:16px; }
+    .promo-card:hover{ transform: translateY(-3px); }
+
+    .franja{ height: 300px; }
+    .franja-text{ padding: 0 40px; }
+    .franja-text h3{ font-size:35.5px; max-width:460px; }
+
+    .hero{ min-height: 88vh; }
+    .hero h1{ font-size: 108px; }
+    .hero-float{ max-width: 740px; }
+
+    footer{ padding: 64px 0 28px; }
+  }
+

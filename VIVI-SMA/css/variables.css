@@ -1,0 +1,30 @@
+
+  :root{
+    --verde: #176B4D;
+    --verde-oscuro: #12563d;
+    --verde-profundo: #0D3B2E;
+    --crema: #F7F4EA;
+    --crema-2: #F0EBDC;
+    --blanco: #FFFFFF;
+    --negro: #111111;
+    --gris: #4B514E;
+    --gris-claro: #8A948F;
+    --naranja: #E8792F;
+    --celeste: #8CCFD1;
+    /* --- Paleta original de VIVÍ SMA restaurada (directiva 45, revisión 5 — fuente de verdad) --- */
+    --terracota: #C96A4A;
+    --terracota-fuerte: #B3533A;
+    --terracota-oscuro: #9A4530;
+    --verde-bosque: #176B4D;
+    --verde-salvia: #6F9F83;
+    --sol: #E4B84A;
+    --dorado-sol: #D5B66A;
+    --arena: #F7F4EA;
+    --grafito: #111111;
+    --blanco-calido: #FFFFFF;
+    --borde: rgba(17,17,17,0.06);
+    --sombra: 0 1px 2px rgba(13,59,46,0.04), 0 8px 24px rgba(13,59,46,0.06);
+    --sombra-hover: 0 4px 10px rgba(13,59,46,0.07), 0 16px 32px rgba(13,59,46,0.10);
+    --sombra-flot: 0 12px 30px rgba(13,59,46,0.16), 0 2px 8px rgba(13,59,46,0.08);
+  }
+
