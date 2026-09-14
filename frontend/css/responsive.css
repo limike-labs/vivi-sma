@@ -25,6 +25,7 @@
 
   /* ================= DESKTOP (min-width 1000px) ================= */
   @media (min-width: 1000px){
+    .wrap{ max-width: 760px; }
     section.block{ padding: 76px 0; }
     .block-head{ margin-bottom: 30px; }
     .block-head h2{ font-size: 34px; }
