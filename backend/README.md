@@ -1,6 +1,6 @@
 # VIVÍ SMA — Backend
 
-Backend de VIVÍ SMA construido con **FastAPI**. Estado actual: **Etapa 1** (servidor funcionando, endpoint de verificación, documentación automática) + **Etapa 2** (cimientos de base de datos: PostgreSQL, SQLAlchemy, psycopg y Alembic). Todavía no incluye autenticación ni ningún módulo de negocio (usuarios, negocios, categorías, eventos, etc.) — eso corresponde a etapas posteriores, según el Prompt Master.
+Backend de VIVÍ SMA construido con **FastAPI**. Estado actual: **Etapa 1** (servidor funcionando, endpoint de verificación, documentación automática) + **Etapa 2** (cimientos de base de datos: PostgreSQL, SQLAlchemy, psycopg y Alembic) + **Etapa 3** (entidad Categoría con endpoints REST). Todavía no incluye autenticación ni otros módulos de negocio (negocios, usuarios, eventos como entidad, etc.) — eso corresponde a etapas posteriores, según el Prompt Master.
 
 Arquitectura actual:
 
@@ -77,6 +77,16 @@ Vas a ver `(venv)` al principio de la línea de tu terminal cuando esté activad
 pip install -r requirements.txt
 ```
 
+### 4.1. Aplicar las migraciones (Etapa 2 y 3)
+
+Con `.env` ya configurado y PostgreSQL corriendo:
+
+```bash
+alembic upgrade head
+```
+
+Esto crea la tabla `categorias` y carga las 8 categorías principales de VIVÍ SMA. Es un paso único (o cada vez que haya migraciones nuevas), no hace falta repetirlo en cada arranque del servidor.
+
 ### 5. Iniciar el servidor
 
 ```bash
@@ -113,6 +123,20 @@ Si `.env` está bien configurado y PostgreSQL está corriendo, deberías ver:
 
 Si no, el mismo endpoint devuelve `database_connected: false` con el detalle del error, sin romper el resto del servidor.
 
+### 6.2. Categorías (Etapa 3)
+
+Con la migración aplicada (ver más abajo), el backend ya expone las 8 categorías principales de VIVÍ SMA:
+
+```
+GET    /categorias          → lista las 8 categorías
+GET    /categorias/{id}     → una categoría puntual
+POST   /categorias          → crea una categoría (409 si el nombre ya existe)
+PUT    /categorias/{id}     → reemplaza nombre y descripción
+DELETE /categorias/{id}     → elimina una categoría
+```
+
+Todos aparecen documentados en `/docs`.
+
 ### 7. Acceder a la documentación automática
 
 FastAPI genera automáticamente dos interfaces de documentación interactiva, sin que tengamos que escribir nada extra:
@@ -129,13 +153,18 @@ Desde `/docs` podés probar el endpoint directamente desde el navegador, sin nec
 ```
 backend/
 ├── app/
-│   ├── main.py            → Instancia de FastAPI + endpoints GET / y GET /health/db
+│   ├── main.py            → Instancia de FastAPI + endpoints propios + registro de routers
 │   ├── core/
 │   │   └── config.py       → Configuración centralizada (variables de entorno)
 │   ├── db/
 │   │   └── session.py      → Conexión SQLAlchemy + psycopg, Base declarativa
-│   └── models/               → Preparado para futuros modelos (vacío por ahora)
-├── alembic/                    → Migraciones (sin migraciones de negocio todavía)
+│   ├── models/
+│   │   └── categoria.py    → Modelo SQLAlchemy Categoria (Etapa 3)
+│   ├── schemas/
+│   │   └── categoria.py    → Esquemas Pydantic de Categoria (Etapa 3)
+│   └── routers/
+│       └── categorias.py   → Endpoints REST de Categoria (Etapa 3)
+├── alembic/                    → Migraciones (incluye la de categorias)
 ├── alembic.ini
 ├── .env.example                → Ejemplo de configuración sin credenciales reales
 ├── requirements.txt
@@ -143,7 +172,18 @@ backend/
 └── README.md
 ```
 
-En etapas posteriores esta estructura crecerá con carpetas como `api/`, `schemas/`, `services/` y `tests/`, y `app/models/` empezará a llenarse con las entidades de negocio reales.
+En etapas posteriores esta estructura crecerá con nuevas entidades (negocios, usuarios, eventos, etc.), cada una siguiendo el mismo patrón: modelo en `app/models/`, esquema en `app/schemas/`, rutas en `app/routers/`.
+
+## Categorías (Etapa 3)
+
+La entidad `Categoria` representa las 8 categorías principales de VIVÍ SMA (Gastronomía, Alojamiento, Turismo, Comercios, Servicios, Salud y bienestar, Transporte, Eventos). Campos: `id`, `nombre` (único), `descripcion`.
+
+- **Modelo** (`app/models/categoria.py`): define la tabla `categorias` en PostgreSQL.
+- **Esquemas** (`app/schemas/categoria.py`): `CategoriaCreate`, `CategoriaUpdate`, `CategoriaRead` — separan la validación de la API del modelo de base de datos.
+- **Rutas** (`app/routers/categorias.py`): implementan `GET /categorias`, `GET /categorias/{id}`, `POST /categorias`, `PUT /categorias/{id}` y `DELETE /categorias/{id}`, usando `get_db()` de `app/db/session.py` — nunca lógica de conexión propia.
+- **Migración** (`alembic/versions/9a974154a336_crear_tabla_categorias.py`): crea la tabla y carga las 8 categorías iniciales como parte del `upgrade()`.
+
+Todavía no existe relación con negocios (eso es de una etapa posterior).
 
 ## Conexión a la base de datos (Etapa 2)
 
@@ -156,11 +196,13 @@ La URL se arma en `app/core/config.py` a partir de las variables `POSTGRES_*` de
 
 ## Uso futuro de Alembic (Etapa 2)
 
-Alembic ya está instalado y configurado (`alembic.ini` + `alembic/env.py`), apuntando a `Base.metadata` de `app/db/session.py` y resolviendo la URL de conexión desde las variables de entorno. **Todavía no hay migraciones**, porque no se diseñaron los modelos de negocio.
+Alembic ya está instalado y configurado (`alembic.ini` + `alembic/env.py`), apuntando a `Base.metadata` de `app/db/session.py` y resolviendo la URL de conexión desde las variables de entorno. La primera migración (Etapa 3) ya crea la tabla `categorias` con sus datos iniciales.
 
-Cuando existan modelos (etapas posteriores):
+Cuando se agreguen nuevos modelos (etapas posteriores):
 
 ```bash
+# Importar el nuevo modelo en alembic/env.py, igual que se hizo con Categoria
+
 # Generar una migración a partir de los modelos
 alembic revision --autogenerate -m "descripción del cambio"
 

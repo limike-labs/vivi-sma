@@ -14,10 +14,10 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 from app.core.config import get_settings  # noqa: E402
 from app.db.session import Base  # noqa: E402
 
-# Etapa 2: todavía no existen modelos de negocio, por lo que Base.metadata
-# está vacío. Cuando se agreguen modelos (etapas posteriores), deberán
-# importarse acá para que "alembic revision --autogenerate" los detecte.
-# Ejemplo futuro: from app.models.negocio import Negocio
+# Importar acá todos los modelos para que Alembic los detecte vía
+# autogenerate. Etapa 3 agrega Categoria; los modelos de etapas
+# posteriores deberán importarse de la misma forma.
+from app.models.categoria import Categoria  # noqa: E402, F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
